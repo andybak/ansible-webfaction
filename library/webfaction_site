@@ -135,12 +135,12 @@ def main():
 
             # If it's on this host and the key parameters are the same, nothing needs to be done.
 
-            if (existing_site['https'] == module.boolean(module.params['https'])) and \
-               (set(existing_site['subdomains']) == set(module.params['subdomains'])) and \
-               (dict(existing_site['website_apps']) == dict(module.params['site_apps'])):
-                module.exit_json(
-                    changed = False
-                )
+            https_matches = existing_site['https'] == module.boolean(module.params['https'])
+            subdomain_matches = set(existing_site['subdomains']) == set(module.params['subdomains'])
+            app_matches = dict(existing_site['website_apps']) == dict(module.params['site_apps'])
+            
+            if https_matches and subdomain_matches and app_matches:
+                module.exit_json(changed=False)
 
         positional_args = [ 
             session_id, site_name, site_ip, 
